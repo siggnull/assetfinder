@@ -4,6 +4,7 @@
   "description": "A script that searches for owned tokens in Ethereum compatible blockchains",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anatoly Ivakin",
