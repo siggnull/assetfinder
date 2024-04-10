@@ -11,6 +11,7 @@
   "author": "Anatoly Ivakin",
   "license": "ISC",
   "dependencies": {
-    "commander": "^12.0.0"
+    "commander": "^12.0.0",
+    "moralis": "^2.25.2"
   }
 }

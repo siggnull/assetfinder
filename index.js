@@ -1,4 +1,5 @@
 import { program } from 'commander'
+import { default as moralis } from 'moralis'
 
 program
   .version('0.0.1', '-v, --version') // duplicate of the version in package.json
