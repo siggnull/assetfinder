@@ -10,13 +10,21 @@ program
 
 const options = program.opts()
 
+const chains = [
+    EvmChain.ARBITRUM,
+    EvmChain.ETHEREUM,
+    EvmChain.SEPOLIA,
+    EvmChain.BSC,
+]
+
 await moralis.start({
   apiKey: options.key
 })
 
-const balance = await moralis.EvmApi.balance.getNativeBalance({
-    address: options.address,
-    chain: EvmChain.ETHEREUM,
-})
-
-console.log(balance.jsonResponse)
+for (const chain of chains) {
+    const response = await moralis.EvmApi.balance.getNativeBalance({
+        address: options.address,
+        chain
+    })
+    console.log(`${chain.name}: ${response.result.balance.ether}`)
+}
