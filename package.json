@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "description": "A script that searches for owned tokens in Ethereum compatible blockchains",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js 0x06e56f9691a0923F7226672f62C04009d05cf835",
+    "start": "node index.js 0x06e56f9691a0923F7226672f62C04009d05cf835 --apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjU5ZjRlZWJhLTA3ZGYtNDI0OS1iMDU0LWRjOTViYmMzYTU1YiIsIm9yZ0lkIjoiMzg3MjcyIiwidXNlcklkIjoiMzk3OTIwIiwidHlwZUlkIjoiMTE4ZDhhN2QtMmRkYy00NWVmLWFlMDgtOTY3MmQ1Y2UyODJhIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MTI3MjcyMTcsImV4cCI6NDg2ODQ4NzIxN30.ZVTktUsGQqQvg7IVWdRTnmujQPdEoEYTn7rXCIDTdsg",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anatoly Ivakin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^12.0.0"
+  }
 }
