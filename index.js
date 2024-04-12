@@ -2,10 +2,6 @@ import { program } from 'commander'
 import { default as moralis } from 'moralis'
 import { EvmChain } from '@moralisweb3/common-evm-utils'
 
-const WARB_ADDRESS = '0x912CE59144191C1204E64559FE8253a0e49E6548'
-const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
-const WBNB_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-
 program
   .version('0.0.1', '-v, --version') // duplicate of the version in package.json
   .requiredOption('-a, --address <address>', 'The address to search for owned tokens.')
@@ -14,52 +10,38 @@ program
 
 const options = program.opts()
 
-const tasks = [
-  {
-    chain: EvmChain.ARBITRUM,
-    priceContract: WARB_ADDRESS,
-  },
-  {
-    chain: EvmChain.ETHEREUM,
-    priceContract: WETH_ADDRESS,
-  },
-  {
-    chain: EvmChain.SEPOLIA,
-    priceContract: undefined,
-  },
-  {
-    chain: EvmChain.BSC,
-    priceContract: WBNB_ADDRESS,
-  },
+const chains = [
+  EvmChain.ARBITRUM,
+  EvmChain.ETHEREUM,
+  EvmChain.SEPOLIA,
+  EvmChain.BSC,
 ]
-
-async function getPriceUsd(moralis, chain, priceContract) {
-  if (priceContract) {
-    const response = await moralis.EvmApi.token.getTokenPrice({
-      address: priceContract,
-      chain: chain,
-    })
-
-    return response.result.usdPrice;
-  }
-
-  return 0.0;
-}
 
 await moralis.start({
   apiKey: options.key
 })
 
-for (const { chain, priceContract } of tasks) {
+let totalUsdValue = 0;
+for (const chain of chains) {
     console.log(`[${chain.name}]`)
-    const response = await moralis.EvmApi.balance.getNativeBalance({
+
+    const response = await moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
+        chain,
         address: options.address,
-        chain: chain,
+        excludeSpam: true,
     })
-    console.log(`Balance = ${response.result.balance.ether}`)
 
-    const priceUsd = await getPriceUsd(moralis, chain, priceContract)
-    const balanceUsd = response.result.balance.ether * priceUsd;
+    let totalChainUsdValue = 0;
+    for (const tokenBalance of response.result) {
+      console.log(`${tokenBalance.name} (${tokenBalance.symbol}): ${tokenBalance.balanceFormatted} (${tokenBalance.usdValue || 0.0} USD)`)
 
-    console.log(`Balance (USD) = ${balanceUsd}`)
+      if (typeof tokenBalance.usdValue === 'number') {
+        totalChainUsdValue += tokenBalance.usdValue
+        totalUsdValue += tokenBalance.usdValue
+      }
+    }
+
+    console.log(`${chain.name} USD: ${totalChainUsdValue}`)
 }
+
+console.log(`Total USD: ${totalUsdValue}`)
